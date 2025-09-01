@@ -2,48 +2,24 @@ pipeline {
     agent any
 
     stages {
-        stage('Checkout') {
+        stage('Build Docker Image') {
             steps {
-                echo 'Cloning repository...'
-                checkout scm
+                sh 'docker build -t my-static-site .'
             }
         }
 
-        stage('Build') {
+        stage('Run Docker Container') {
             steps {
-                echo 'No build step needed for static site.'
+                sh 'docker run -d -p 8080:80 my-static-site'
             }
         }
-
-        stage('Test') {
-            steps {
-                echo 'No automated tests defined. Skipping.'
-            }
-        }
-
-        stage('Archive') {
-            steps {
-                echo 'Archiving static website files...'
-                archiveArtifacts artifacts: '**/*.html, **/*.css, **/*.js', fingerprint: true
-            }
-        }
-
-        // Optional: Deploy to a web server or S3 bucket
-        // stage('Deploy') {
-        //     steps {
-        //         echo 'Deploying site...'
-        //         // Example: Use SCP, S3 CLI, or Rsync here
-        //     }
-        // }
     }
 
     post {
         success {
-            echo 'Build completed successfully.'
-        }
-        failure {
-            echo 'Build failed.'
+            echo 'Website is running on port 8080'
         }
     }
 }
+
 
