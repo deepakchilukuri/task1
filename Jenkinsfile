@@ -10,14 +10,14 @@ pipeline {
 
         stage('Run Docker Container') {
             steps {
-                sh 'docker run -d -p 8080:80 my-static-site'
+                sh 'docker run -d -p 8090:80 my-static-site'
             }
         }
     }
 
     post {
         success {
-            echo 'Website is running on port 8080'
+            echo 'Website is running on port 8090'
         }
     }
 }
